@@ -1,0 +1,7 @@
+main: Main
+name: BasePluginProject
+author: 'blume#0338'
+version: 1.0
+api-version: 1.19
+commands:
+  giveitem:
