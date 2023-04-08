@@ -1,6 +1,10 @@
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Piglin;
+import org.bukkit.entity.PiglinBrute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -30,6 +34,43 @@ public class Commands implements CommandExecutor{
 							if(it.getItemMeta().getDisplayName().equalsIgnoreCase(s)) {
 								plugin.addItem(p, it);
 							}
+						}
+					}
+				}
+			}
+			else if(label.equals("spawn")) {
+				Location loc = p.getTargetBlock(null, 100).getLocation();
+				if(args[0].equals("bacon")) {
+					if(args.length == 1) {
+						Piglin piglin = (Piglin)loc.getWorld().spawnEntity(loc, EntityType.PIGLIN);
+						piglin.setCustomName(plugin.bacon);piglin.setImmuneToZombification(true);
+						piglin.setAdult();
+					}
+					else if(args.length == 2) {
+						try {
+							for(int i = 0;i<Integer.parseInt(args[1]);i++) {
+								Piglin piglin = (Piglin)loc.getWorld().spawnEntity(loc, EntityType.PIGLIN);
+								piglin.setCustomName(plugin.bacon);piglin.setImmuneToZombification(true);
+								piglin.setAdult();
+							}
+						} catch (Exception e) {
+						}
+					}
+				}
+				else if(args[0].equals("baconwarrior")) {
+					if(args.length == 1) {
+						PiglinBrute piglin = (PiglinBrute)loc.getWorld().spawnEntity(loc, EntityType.PIGLIN_BRUTE);
+						piglin.setCustomName(plugin.baconWarrior);piglin.setImmuneToZombification(true);
+						piglin.setAdult();
+					}
+					else if(args.length == 2) {
+						try {
+							for(int i = 0;i<Integer.parseInt(args[1]);i++) {
+								PiglinBrute piglin = (PiglinBrute)loc.getWorld().spawnEntity(loc, EntityType.PIGLIN_BRUTE);
+								piglin.setCustomName(plugin.baconWarrior);piglin.setImmuneToZombification(true);
+								piglin.setAdult();
+							}
+						} catch (Exception e) {
 						}
 					}
 				}

@@ -1,6 +1,9 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -8,6 +11,7 @@ import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.ArmorStand;
@@ -19,7 +23,12 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Shulker;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -27,11 +36,176 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-public class Main extends JavaPlugin{
+public class Main extends JavaPlugin implements Listener{
 
+	String bacon = "Bacon";
+	String baconWarrior = "Bacon Warrior";
+	String portableChest = "Portable Chest";
+	public Map<UUID, Inventory> savedInventories = new HashMap<>();
 	@Override
 	public void onEnable() {
+
+		getCommand("spawn").setExecutor(new Commands(this));
 		getCommand("giveitem").setExecutor(new Commands(this));
+
+		getServer().getPluginManager().registerEvents(this, this);
+		dirtBeaconRecipe();hayBaleRecipe();
+		campfireBeaconRecipe();chestBeaconRecipe();
+		ironBeaconRecipe();stainedGlassBeaconRecipe();
+		tntBeaconRecipe();beeBeaconRecipe();
+		blueIceBeaconRecipe();diamondBeaconRecipe();
+		enchantingBeacon();bedrockBeaconRecipe();
+	}
+	@Override
+	public void onDisable() {
+		for(World w : Bukkit.getWorlds()) {
+			for(Entity ent : w.getEntities()) {
+				if(ent.getType().equals(EntityType.ARMOR_STAND)) {
+					ent.remove();
+				}
+			}
+		}
+	}
+	public boolean hasBaseUnder(ArmorStand stand, Material matType) {
+		for(int x = -1; x<=1;x++) {
+			for(int z = -1; z<=1;z++) {
+				Location loc = addToLoc(stand.getLocation(), x, -1, z);
+				if(loc.getBlock().getType()!=matType) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	Items item = new Items();
+	NamespacedKey a,b,c,d,e,f,g,h,i,j,k,l;
+	@EventHandler
+	public void onJoin(PlayerJoinEvent evt) {
+		Player p = evt.getPlayer();
+		p.discoverRecipe(a);p.discoverRecipe(b);p.discoverRecipe(c);
+		p.discoverRecipe(d);p.discoverRecipe(e);p.discoverRecipe(f);
+		p.discoverRecipe(g);p.discoverRecipe(h);p.discoverRecipe(i);
+		p.discoverRecipe(j);p.discoverRecipe(k);p.discoverRecipe(l);
+	}
+
+	public void dirtBeaconRecipe() {
+		ItemStack result = item.dirtBeacon();
+		this.a = new NamespacedKey(this, "a");
+		ShapedRecipe recipe = new ShapedRecipe(a, result);
+		recipe.shape("222", "212", "111");
+		recipe.setIngredient('1', Material.DIRT);
+		recipe.setIngredient('2', Material.GLASS);
+		Bukkit.addRecipe(recipe);
+	}
+	public void hayBaleRecipe() {
+		ItemStack result = item.hayBaleBeacon();
+		this.b = new NamespacedKey(this, "b");
+		ShapedRecipe recipe = new ShapedRecipe(b, result);
+		recipe.shape("222", "232", "111");
+		recipe.setIngredient('1', Material.OAK_PLANKS);
+		recipe.setIngredient('2', Material.GLASS);
+		recipe.setIngredient('3', Material.HAY_BLOCK);
+		Bukkit.addRecipe(recipe);
+	}
+	public void campfireBeaconRecipe() {
+		ItemStack result = item.campfireBeacon();
+		this.c = new NamespacedKey(this, "c");
+		ShapedRecipe recipe = new ShapedRecipe(c, result);
+		recipe.shape("222", "212", "333");
+		recipe.setIngredient('1', Material.CAMPFIRE);
+		recipe.setIngredient('2', Material.GLASS);
+		recipe.setIngredient('3', Material.COAL_BLOCK);
+		Bukkit.addRecipe(recipe);
+	}
+	public void chestBeaconRecipe() {
+		ItemStack result = item.chestBeacon();
+		this.d = new NamespacedKey(this, "d");
+		ShapedRecipe recipe = new ShapedRecipe(d, result);
+		recipe.shape("222", "212", "333");
+		recipe.setIngredient('1', Material.CHEST);
+		recipe.setIngredient('2', Material.GLASS);
+		recipe.setIngredient('3', Material.OAK_PLANKS);
+		Bukkit.addRecipe(recipe);
+	}
+	public void ironBeaconRecipe() {
+		ItemStack result = item.ironBeacon();
+		this.e = new NamespacedKey(this, "e");
+		ShapedRecipe recipe = new ShapedRecipe(e, result);
+		recipe.shape("222", "212", "333");
+		recipe.setIngredient('1', Material.IRON_BLOCK);
+		recipe.setIngredient('2', Material.GLASS);
+		recipe.setIngredient('3', Material.SMOOTH_STONE);
+		Bukkit.addRecipe(recipe);
+	}
+	public void stainedGlassBeaconRecipe() {
+		ItemStack result = item.stainedGlassBeacon();
+		this.f = new NamespacedKey(this, "f");
+		ShapedRecipe recipe = new ShapedRecipe(f, result);
+		recipe.shape("222", "232", "111");
+		recipe.setIngredient('1', Material.BROWN_STAINED_GLASS);
+		recipe.setIngredient('2', Material.GLASS);
+		recipe.setIngredient('3', Material.EMERALD);
+		Bukkit.addRecipe(recipe);
+	}
+	public void tntBeaconRecipe() {
+		ItemStack result = item.tntBeacon();
+		this.g = new NamespacedKey(this, "g");
+		ShapedRecipe recipe = new ShapedRecipe(g, result);
+		recipe.shape("222", "212", "333");
+		recipe.setIngredient('1', Material.TNT);
+		recipe.setIngredient('2', Material.GLASS);
+		recipe.setIngredient('3', Material.SAND);
+		Bukkit.addRecipe(recipe);
+	}
+	public void beeBeaconRecipe() {
+		ItemStack result = item.beeBeacon();
+		this.h = new NamespacedKey(this, "h");
+		ShapedRecipe recipe = new ShapedRecipe(h, result);
+		recipe.shape("222", "212", "333");
+		recipe.setIngredient('1', Material.BEE_NEST);
+		recipe.setIngredient('2', Material.GLASS);
+		recipe.setIngredient('3', Material.OAK_PLANKS);
+		Bukkit.addRecipe(recipe);
+	}
+	public void blueIceBeaconRecipe() {
+		ItemStack result = item.blueIceBeacon();
+		this.i = new NamespacedKey(this, "i");
+		ShapedRecipe recipe = new ShapedRecipe(i, result);
+		recipe.shape("222", "212", "333");
+		recipe.setIngredient('1', Material.BLUE_ICE);
+		recipe.setIngredient('2', Material.GLASS);
+		recipe.setIngredient('3', Material.SNOW_BLOCK);
+		Bukkit.addRecipe(recipe);
+	}
+	public void diamondBeaconRecipe() {
+		ItemStack result = item.diamondBeacon();
+		this.j = new NamespacedKey(this, "j");
+		ShapedRecipe recipe = new ShapedRecipe(j, result);
+		recipe.shape("222", "212", "333");
+		recipe.setIngredient('1', Material.DIAMOND);
+		recipe.setIngredient('2', Material.GLASS);
+		recipe.setIngredient('3', Material.BEDROCK);
+		Bukkit.addRecipe(recipe);
+	}
+	public void enchantingBeacon() {
+		ItemStack result = item.enchantingBeacon();
+		this.k = new NamespacedKey(this, "k");
+		ShapedRecipe recipe = new ShapedRecipe(k, result);
+		recipe.shape("222", "212", "333");
+		recipe.setIngredient('1', Material.ENCHANTING_TABLE);
+		recipe.setIngredient('2', Material.GLASS);
+		recipe.setIngredient('3', Material.BOOKSHELF);
+		Bukkit.addRecipe(recipe);
+	}
+	public void bedrockBeaconRecipe() {
+		ItemStack result = item.bedrockBeacon();
+		this.l = new NamespacedKey(this, "l");
+		ShapedRecipe recipe = new ShapedRecipe(l, result);
+		recipe.shape("222", "212", "333");
+		recipe.setIngredient('1', Material.BEDROCK);
+		recipe.setIngredient('2', Material.GLASS);
+		recipe.setIngredient('3', Material.GUNPOWDER);
+		Bukkit.addRecipe(recipe);
 	}
 	public boolean sameName(Entity ent, String name) {
 		if(ent.getCustomName()!=null && ent.getCustomName().equals(name)) {
@@ -360,7 +534,7 @@ public class Main extends JavaPlugin{
 			fb.setVelocity(new Vector(randomDouble(-1,1),randomDouble(0, 1),randomDouble(-1,1)));
 		}
 	}
-	public double randomDouble(int rangeMin,int rangeMax) {
+	public double randomDouble(double rangeMin,double rangeMax) {
 		return rangeMin + (rangeMax - rangeMin) * rand.nextDouble();
 	}
 }
